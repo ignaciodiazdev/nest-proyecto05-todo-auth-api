@@ -1,21 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Req, UseGuards, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/decorator/user.decorator';
+import type { JwtPayload } from 'src/auth/jwt.payload';
 
+@UseGuards(AuthGuard())
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    const userId = '123e4567-e89b-12d3-a456-426655440000';
+  create(
+    @User('sub') userId: JwtPayload['sub'],
+    @Body() createTaskDto: CreateTaskDto
+  ) {
     return this.tasksService.create(createTaskDto, userId);
   }
 
   @Get()
   findAll() {
     return this.tasksService.findAll();
+  }
+
+  @Get('/my-tasks')
+  findMyTasks(
+    @User('sub') userId: JwtPayload['sub'],
+    @Query('completed') completed?: boolean,
+  ){
+    return this.tasksService.findMyTasks(userId, completed);
   }
 
   @Get(':id')
