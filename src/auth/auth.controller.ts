@@ -1,7 +1,5 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from './decorator/user.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
@@ -17,12 +15,5 @@ export class AuthController {
   @Post('/login')
   login(@Body() loginDto: LoginDto){
     return this.authService.login(loginDto);
-  }
-
-  // Test para probar la autenticación jwt
-  @UseGuards(AuthGuard())
-  @Get('/test')
-  test(@User('sub') sub: string){
-    return sub;
   }
 }
