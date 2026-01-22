@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Req, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, UseGuards, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -28,22 +28,32 @@ export class TasksController {
   findMyTasks(
     @User('sub') userId: JwtPayload['sub'],
     @Query('completed') completed?: boolean,
-  ){
+  ) {
     return this.tasksService.findMyTasks(userId, completed);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tasksService.findOne(id);
+  findOne(
+    @User('sub') userId: JwtPayload['sub'],
+    @Param('id', ParseUUIDPipe) taskId: string,
+  ) {
+    return this.tasksService.findOne(taskId, userId);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(id, updateTaskDto);
+  update(
+    @User('sub') userId: JwtPayload['sub'],
+    @Param('id', ParseUUIDPipe) taskId: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ) {
+    return this.tasksService.update(taskId, userId, updateTaskDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tasksService.remove(id);
+  remove(
+    @User('sub') userId: JwtPayload['sub'],
+    @Param('id', ParseUUIDPipe) taskId: string,
+  ) {
+    return this.tasksService.remove(taskId, userId);
   }
 }

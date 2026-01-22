@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, PrismaClient } from 'src/generated/prisma/client';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class TasksService {
@@ -28,18 +28,18 @@ export class TasksService {
     return this.prisma.task.findMany();
   }
 
-  async findMyTasks(id: string, completed?: boolean){
+  async findMyTasks(userId: string, completed?: boolean){
     return await this.prisma.task.findMany({
       where: { 
-        userId: id,
+        userId,
         ...(completed !== undefined && { completed }),
       },
     });
   }
 
-  async findOne(id: string) {
+  async findOne(taskId: string, userId: string) {
     const task = await this.prisma.task.findUnique({
-      where: { id },
+      where: { id: taskId, userId },
     });
   
     if(!task) throw new NotFoundException('Tarea no encontrada');
@@ -47,11 +47,11 @@ export class TasksService {
     return task;
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto) {
+  async update(taskId: string, userId: string, updateTaskDto: UpdateTaskDto) {
     try {
       return await this.prisma.task.update({
         data: updateTaskDto,
-        where: { id },
+        where: { id: taskId, userId },
       });
 
     } catch (error) {
@@ -62,10 +62,10 @@ export class TasksService {
     }
   }
 
-  async remove(id: string) {
+  async remove(taskId: string, userId: string) {
     try {
       await this.prisma.task.delete({
-        where: { id },
+        where: { id: taskId, userId },
       });
 
     } catch (error) {
