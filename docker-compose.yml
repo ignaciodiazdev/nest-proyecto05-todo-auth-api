@@ -1,12 +1,12 @@
 services:
   db:
     image: postgres:15
-    container_name: nest-prisma-db
+    container_name: task-manager-db
     ports:
       - 5420:5432
     environment:
       - POSTGRES_PASSWORD=MySecretPassword
-      - POSTGRES_DB=nest-prisma-test
+      - POSTGRES_DB=task-manager
     volumes:
       - postgres_data:/var/lib/postgresql/data
 volumes:
