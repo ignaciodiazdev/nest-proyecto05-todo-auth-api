@@ -28,38 +28,34 @@ Cada usuario puede crear y administrar únicamente sus propias tareas.
 - Node.js >= 18
 - Docker y Docker Compose
 
-## Variables de entorno
-
-Crear un archivo `.env` basado en `.env.example`.
-
-Ejemplo:
-```bash
-DATABASE_URL= "postgresql://postgres:MySecretPassword@localhost:5420/nest-prisma-test?schema=public"
-
-JWT_SECRET="MyJwtSecretKey"
-```
-
 ## Instalación y ejecución
 
 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/task-manager-api.git
-cd task-manager-api
+git clone https://github.com/ignaciodiazdev/nest-proyecto05-todo-auth-api.git
+cd nest-proyecto05-todo-auth-api
 ```
-2. Levantar la base de datos
+
+2. Crear un archivo `.env` basado en `.env.example`.
+```bash
+DATABASE_URL= "postgresql://postgres:MySecretPassword@localhost:5420/task-manager?schema=public"
+
+JWT_SECRET="MyJwtSecretKey"
+```
+3. Levantar la base de datos
 ```bash
 docker-compose up -d
 ```
-3. Instalar dependencias
+4. Instalar dependencias
 ```bash
 npm install
 ```
-4. Ejecutar migraciones de Prisma
+5. Ejecutar migraciones de Prisma
 ```bash
 npx prisma migrate dev
 ```
-5. Iniciar la aplicación
+6. Iniciar la aplicación
 ```bash
 npm run start:dev
 ```
